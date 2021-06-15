@@ -1,16 +1,36 @@
 ﻿@page "/counter"
 
-<h1>Counter</h1>
+<ListarPeliculas Titulo="Peliculas Ramdom" Peliculas="ObtenerPeliculasRamdom()"></ListarPeliculas>
 
-<p>Current count: @currentCount</p>
+<p>Inserte una Pelicula</p>
+<TextoAtributos ></TextoAtributos>
 
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
-
-@code {
-    private int currentCount = 0;
-
-    private void IncrementCount()
+@code
+{
+    private List<Pelicula> ObtenerPeliculasRamdom()
     {
-        currentCount++;
+        return new List<Pelicula>()
+        {
+                new Pelicula()
+                {
+                    Titulo = "Demon Slayer - Tren del Infinito",
+                    FechaLanzamiento = new DateTime(2018, 10, 31)
+                },
+                new Pelicula()
+                {
+                    Titulo = "Titanic",
+                    FechaLanzamiento = new DateTime(2021, 10, 31)
+                },
+                new Pelicula()
+                {
+                    Titulo = "Mentiras Verdaderas",
+                    FechaLanzamiento = new DateTime(2022, 10, 31)
+                },
+                new Pelicula()
+                {
+                    Titulo = "SpiderMan 3",
+                    FechaLanzamiento = new DateTime(2022, 10, 31)
+                }
+        };
     }
 }

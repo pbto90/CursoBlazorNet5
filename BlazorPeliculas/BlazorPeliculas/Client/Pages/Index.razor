@@ -1,7 +1,60 @@
 ﻿@page "/"
 
-<h1>Hello, world!</h1>
+<p>Bienvenido @nombre a este curso de Blazor</p>
+<p>Vamos a sumar 2 + 2 = @(2 + 2)</p>
+<p>Has preciando el boton @contador veces!</p>
+<button @onclick="@ManejarClick">Presioname</button>
 
-Welcome to your new app.
+<br>
+<br>
+@*Podemos llamar clases desde Codigo Razor*@
+<p>Tu nombre en mayusculas es @Helpers.ConvierteEnMayusculas(nombre)</p>
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+@*Crear Objetos apartir de una clase*@
+<p>@(objeto.Prueba())</p>
+
+<ListarPeliculas Titulo="Peliculas de Halloween" Peliculas="ObtenerPeliculasHalloween()"></ListarPeliculas>
+
+@code
+{
+    string nombre = "Jose Alberto Romero";
+    int contador = 0;
+    ClaseEnRazor objeto = new ClaseEnRazor();
+
+    private void ManejarClick()
+    {
+        contador++;
+    }
+
+    public class ClaseEnRazor
+    {
+        public string Prueba()
+        {
+            return "Este es un metodo de una clase local";
+        }
+    }
+
+    private List<Pelicula> ObtenerPeliculasHalloween()
+    {
+        return new List<Pelicula>()
+        {
+                new Pelicula()
+                {
+                    Titulo = "Halloween 2018",
+                    FechaLanzamiento = new DateTime(2018, 10, 31)
+                },
+                new Pelicula()
+                {
+                    Titulo = "Halloween Kills",
+                    FechaLanzamiento = new DateTime(2021, 10, 31)
+                },
+                new Pelicula()
+                {
+                    Titulo = "Halloween Ends",
+                    FechaLanzamiento = new DateTime(2022, 10, 31)
+                }
+        };
+    }
+}
+
+

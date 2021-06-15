@@ -1,0 +1,16 @@
+﻿<p>Titulo : <b> @Pelicula.Titulo </b></p>
+<p>Fecha de Lanzamiento : <b> @Pelicula.FechaLanzamiento </b></p>
+
+@if (MostrarBotones) 
+{
+   <button @onclick="@(() => EliminarPeliculaCallBack.InvokeAsync(Pelicula))">Eliminar Pelicula</button>
+}
+
+@code
+{
+    [Parameter] public Pelicula Pelicula { set; get; }
+    [Parameter] public bool MostrarBotones { set; get; }
+    [Parameter] public EventCallback<Pelicula> EliminarPeliculaCallBack { set; get; }
+
+
+}

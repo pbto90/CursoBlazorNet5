@@ -1,0 +1,44 @@
+﻿<div>
+    <h3>@Titulo</h3>
+
+    <br>
+    @if (Peliculas == null)
+    {
+        <text> Cargando... </text>
+    }
+    else if (Peliculas.Count == 0)
+    {
+        <text> No hay regitros para mostrar!! </text>
+    }
+    else
+    {
+        <input type="checkbox" @bind="MostrarBotoles" />
+
+        @foreach (Pelicula pelicula in Peliculas)
+        {
+           <PeliculaIndividual Pelicula="pelicula"
+                               MostrarBotones="MostrarBotoles"
+                               EliminarPeliculaCallBack="MostrarMensajeEnConsola">
+
+           </PeliculaIndividual>     
+        }
+    }
+</div>
+
+@code
+{
+    [Parameter]
+    public string Titulo { set; get; }
+
+    [Parameter]
+    public List<Pelicula> Peliculas { set; get; }
+
+    bool MostrarBotoles = true;
+
+    private void MostrarMensajeEnConsola(Pelicula pelicula)
+    {
+        Peliculas.Remove(pelicula);
+        Console.WriteLine("Se ha borrado la pelicula " + pelicula.Titulo);
+    }
+}
+
