@@ -1,0 +1,41 @@
+﻿@typeparam Titem
+
+
+@if (Listado == null)
+{
+    @Cargando
+}
+else if (Listado.Count == 0)
+{
+    //Un solo contenido
+    @*@ChildContent*@
+
+    @CuandoNoHayRegistros
+}
+else
+{
+    foreach (Titem item in Listado) 
+    {
+        @HayRegistros(item);
+    }
+}
+
+
+@code
+{
+    //Parametro cuando solo es un Contenido por padre
+    //[Parameter]
+    //public RenderFragment ChildContent { set; get; }
+
+    [Parameter]
+    public RenderFragment CuandoNoHayRegistros { set; get; }
+
+    [Parameter]
+    public RenderFragment Cargando { set; get; }
+
+    [Parameter]
+    public RenderFragment<Titem> HayRegistros { set; get; }
+
+    [Parameter]
+    public List<Titem> Listado { set; get; }
+}

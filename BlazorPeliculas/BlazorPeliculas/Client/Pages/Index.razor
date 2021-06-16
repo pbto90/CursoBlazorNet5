@@ -1,4 +1,5 @@
 ﻿@page "/"
+@inject IRepositorioPeliculas repositorioPeliculas
 
 <p>Bienvenido @nombre a este curso de Blazor</p>
 <p>Vamos a sumar 2 + 2 = @(2 + 2)</p>
@@ -13,7 +14,14 @@
 @*Crear Objetos apartir de una clase*@
 <p>@(objeto.Prueba())</p>
 
-<ListarPeliculas Titulo="Peliculas de Halloween" Peliculas="ObtenerPeliculasHalloween()"></ListarPeliculas>
+<ListarPeliculas Titulo="Peliculas" Peliculas="ObtenerPeliculasHalloween()">
+</ListarPeliculas>
+<br>
+<ListarPeliculas Titulo="Cargando" Peliculas="null">
+</ListarPeliculas>
+<br>
+<ListarPeliculas Titulo="Sin Peliculas" Peliculas="new List<Pelicula>()">
+</ListarPeliculas>
 
 @code
 {
@@ -36,24 +44,7 @@
 
     private List<Pelicula> ObtenerPeliculasHalloween()
     {
-        return new List<Pelicula>()
-        {
-                new Pelicula()
-                {
-                    Titulo = "Halloween 2018",
-                    FechaLanzamiento = new DateTime(2018, 10, 31)
-                },
-                new Pelicula()
-                {
-                    Titulo = "Halloween Kills",
-                    FechaLanzamiento = new DateTime(2021, 10, 31)
-                },
-                new Pelicula()
-                {
-                    Titulo = "Halloween Ends",
-                    FechaLanzamiento = new DateTime(2022, 10, 31)
-                }
-        };
+        return repositorioPeliculas.ObtenerPeliculas();
     }
 }
 

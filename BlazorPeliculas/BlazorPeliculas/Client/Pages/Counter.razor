@@ -1,36 +1,64 @@
 ﻿@page "/counter"
+@inject ServicioSingleton singleton
+@inject ServicioTransient transient
+@inject IRepositorioPeliculas repositorioPeliculas
 
-<ListarPeliculas Titulo="Peliculas Ramdom" Peliculas="ObtenerPeliculasRamdom()"></ListarPeliculas>
+<button @onclick="HazmeClick">Click !</button>
+<div>Contador : @Contador</div>
+<div>Singleton : @singleton.Valor</div>
+<div>Trasient : @transient.Valor</div>
 
-<p>Inserte una Pelicula</p>
-<TextoAtributos ></TextoAtributos>
+<br>
+<input type="text" placeholder="Inserte una nombre de Pelicula" @bind="NombrePelicula" />
+<button @onclick="InsertaNuevaPelicula">Agregar</button>
+<br>
+
+<ListarPeliculas Titulo="Peliculas Ramdom" Peliculas="Peliculas"></ListarPeliculas>
+<br />
 
 @code
 {
-    private List<Pelicula> ObtenerPeliculasRamdom()
+    public List<Pelicula> Peliculas { set; get; }
+    public string NombrePelicula { set; get; }
+    private int Contador { set; get; }
+
+    private void InsertaNuevaPelicula()
     {
-        return new List<Pelicula>()
+        Pelicula peliculaNueva = new Pelicula()
         {
-                new Pelicula()
-                {
-                    Titulo = "Demon Slayer - Tren del Infinito",
-                    FechaLanzamiento = new DateTime(2018, 10, 31)
-                },
-                new Pelicula()
-                {
-                    Titulo = "Titanic",
-                    FechaLanzamiento = new DateTime(2021, 10, 31)
-                },
-                new Pelicula()
-                {
-                    Titulo = "Mentiras Verdaderas",
-                    FechaLanzamiento = new DateTime(2022, 10, 31)
-                },
-                new Pelicula()
-                {
-                    Titulo = "SpiderMan 3",
-                    FechaLanzamiento = new DateTime(2022, 10, 31)
-                }
+            Titulo = NombrePelicula,
+            FechaLanzamiento = DateTime.Today
         };
+
+        Peliculas.Add(peliculaNueva);
+    }
+
+    private void HazmeClick()
+    {
+        Contador++;
+        singleton.Valor = Contador;
+        transient.Valor = Contador;
+    }
+
+    protected override void OnInitialized()
+    {
+        Peliculas = repositorioPeliculas.ObtenerPeliculas();
+        Console.WriteLine($"Total de peliculas al Iniciar : {Peliculas.Count} Peliculas");
+    }
+
+    protected override void OnParametersSet()
+    {
+        Console.WriteLine("OnParametersSet");
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        Console.WriteLine($"OnAfterRender Por primera vez : { firstRender }");
+    }
+
+    protected override bool ShouldRender()
+    {
+        Console.WriteLine("ShouldRender");
+        return true;
     }
 }

@@ -1,28 +1,21 @@
-﻿<div>
-    <h3>@Titulo</h3>
+﻿@inject IJSRuntime js
 
-    <br>
-    @if (Peliculas == null)
-    {
-        <text> Cargando... </text>
-    }
-    else if (Peliculas.Count == 0)
-    {
-        <text> No hay regitros para mostrar!! </text>
-    }
-    else
+<div>
+
+    @if (Peliculas != null && Peliculas.Count > 0)
     {
         <input type="checkbox" @bind="MostrarBotoles" />
-
-        @foreach (Pelicula pelicula in Peliculas)
-        {
-           <PeliculaIndividual Pelicula="pelicula"
-                               MostrarBotones="MostrarBotoles"
-                               EliminarPeliculaCallBack="MostrarMensajeEnConsola">
-
-           </PeliculaIndividual>     
-        }
     }
+
+    <ListadoGenerico Listado="Peliculas">
+        <HayRegistros>
+            <PeliculaIndividual Pelicula="context"
+                                MostrarBotones="MostrarBotoles"
+                                EliminarPeliculaCallBack="MostrarMensajeEnConsola">
+            </PeliculaIndividual>
+        </HayRegistros>
+    </ListadoGenerico>
+
 </div>
 
 @code
@@ -35,10 +28,15 @@
 
     bool MostrarBotoles = true;
 
-    private void MostrarMensajeEnConsola(Pelicula pelicula)
+    async Task MostrarMensajeEnConsola(Pelicula pelicula)
     {
-        Peliculas.Remove(pelicula);
-        Console.WriteLine("Se ha borrado la pelicula " + pelicula.Titulo);
+        var aceptar = await js.Confirm($"Esta seguro borrar la pelicula { pelicula.Titulo } ?");
+       
+        if (aceptar)
+        {
+            Peliculas.Remove(pelicula);
+            Console.WriteLine("Se ha borrado la pelicula " + pelicula.Titulo); 
+        }
     }
 }
 

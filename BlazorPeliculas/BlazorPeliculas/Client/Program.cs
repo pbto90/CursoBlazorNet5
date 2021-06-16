@@ -1,3 +1,5 @@
+using BlazorPeliculas.Client.Servicios;
+using BlazorPeliculas.Client.Servicios.Interfaces;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,8 +20,16 @@ namespace BlazorPeliculas.Client
             builder.RootComponents.Add<App>("#app");
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-
+            ConfiguracionServicios(builder.Services);
+            
             await builder.Build().RunAsync();
+        }
+
+        private static void ConfiguracionServicios(IServiceCollection servicios) 
+        {
+            servicios.AddSingleton<ServicioSingleton>();
+            servicios.AddTransient<ServicioTransient>();
+            servicios.AddSingleton<IRepositorioPeliculas, RepositorioPeliculas>();
         }
     }
 }
