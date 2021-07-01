@@ -16,10 +16,16 @@
         </HayRegistros>
     </ListadoGenerico>
 
+    <ModalMensaje @ref="modal" Encavezado="Confirmar" Confirmar="BorrarPeliculaConfirmacion" Cancelar="CancelarConfirmacion">
+        <div>Desea borrar la pelicula ?</div>
+    </ModalMensaje>
+
 </div>
 
 @code
 {
+    ModalMensaje modal;
+
     [Parameter]
     public string Titulo { set; get; }
 
@@ -27,16 +33,26 @@
     public List<Pelicula> Peliculas { set; get; }
 
     bool MostrarBotoles = true;
+    Pelicula peliculaBorrar;
 
-    async Task MostrarMensajeEnConsola(Pelicula pelicula)
+
+    void MostrarMensajeEnConsola(Pelicula pelicula)
     {
-        var aceptar = await js.Confirm($"Esta seguro borrar la pelicula { pelicula.Titulo } ?");
-       
-        if (aceptar)
-        {
-            Peliculas.Remove(pelicula);
-            Console.WriteLine("Se ha borrado la pelicula " + pelicula.Titulo); 
-        }
+        modal.Mostrar();
+        peliculaBorrar = pelicula;
+    }
+
+    void BorrarPeliculaConfirmacion()
+    {
+        Peliculas.Remove(peliculaBorrar);
+        modal.Ocultar();
+        peliculaBorrar = null;
+    }
+
+    void CancelarConfirmacion()
+    {
+        modal.Ocultar();
+        peliculaBorrar = null;
     }
 }
 

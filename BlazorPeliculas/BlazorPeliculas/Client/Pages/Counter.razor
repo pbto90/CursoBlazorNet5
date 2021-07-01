@@ -2,8 +2,11 @@
 @inject ServicioSingleton singleton
 @inject ServicioTransient transient
 @inject IRepositorioPeliculas repositorioPeliculas
+@inject IJSRuntime Js
 
+<h1>Counter</h1>
 <button @onclick="HazmeClick">Click !</button>
+<button @onclick="HazmeClickJavaScript">Click JavaScript!</button>
 <div>Contador : @Contador</div>
 <div>Singleton : @singleton.Valor</div>
 <div>Trasient : @transient.Valor</div>
@@ -14,13 +17,18 @@
 <br>
 
 <ListarPeliculas Titulo="Peliculas Ramdom" Peliculas="Peliculas"></ListarPeliculas>
+
 <br />
 
 @code
 {
     public List<Pelicula> Peliculas { set; get; }
     public string NombrePelicula { set; get; }
+
     private int Contador { set; get; }
+    static int ContadorJs = 0;
+
+    IJSObjectReference moduloJs;
 
     private void InsertaNuevaPelicula()
     {
@@ -33,11 +41,29 @@
         Peliculas.Add(peliculaNueva);
     }
 
-    private void HazmeClick()
+    [JSInvokable]
+    public async Task HazmeClick()
     {
+        moduloJs = await Js.InvokeAsync<IJSObjectReference>("import","./js/Counter.js");
+        await moduloJs.InvokeVoidAsync("AlertaMensaje", "Hola desde C#");
+
         Contador++;
         singleton.Valor = Contador;
         transient.Valor = Contador;
+        ContadorJs++;
+        await Js.InvokeVoidAsync("pruebaPuntoNetStatic");
+    }
+
+    [JSInvokable]
+    public async Task HazmeClickJavaScript()
+    {
+        await Js.InvokeVoidAsync("pruebaPuntoNetInstancia", DotNetObjectReference.Create(this));
+    }
+
+    [JSInvokable]
+    public static Task<int> ObtenerCurrentCount()
+    {
+        return Task.FromResult(ContadorJs);
     }
 
     protected override void OnInitialized()
