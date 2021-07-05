@@ -1,50 +1,16 @@
 ﻿@page "/"
 @inject IRepositorioPeliculas repositorioPeliculas
 
-<p>Bienvenido @nombre a este curso de Blazor</p>
-<p>Vamos a sumar 2 + 2 = @(2 + 2)</p>
-<p>Has preciando el boton @contador veces!</p>
-<button @onclick="@ManejarClick">Presioname</button>
-
-<br>
-<br>
-@*Podemos llamar clases desde Codigo Razor*@
-<p>Tu nombre en mayusculas es @Helpers.ConvierteEnMayusculas(nombre)</p>
-
-@*Crear Objetos apartir de una clase*@
-<p>@(objeto.Prueba())</p>
-
-<ListarPeliculas Titulo="Peliculas" Peliculas="ObtenerPeliculasHalloween()">
-</ListarPeliculas>
-<br>
-<ListarPeliculas Titulo="Cargando" Peliculas="null">
-</ListarPeliculas>
-<br>
-<ListarPeliculas Titulo="Sin Peliculas" Peliculas="new List<Pelicula>()">
+<ListarPeliculas Peliculas="Peliculas">
 </ListarPeliculas>
 
 @code
 {
-    string nombre = "Jose Alberto Romero";
-    int contador = 0;
-    ClaseEnRazor objeto = new ClaseEnRazor();
+    private List<Pelicula> Peliculas;
 
-    private void ManejarClick()
+    protected override void OnInitialized()
     {
-        contador++;
-    }
-
-    public class ClaseEnRazor
-    {
-        public string Prueba()
-        {
-            return "Este es un metodo de una clase local";
-        }
-    }
-
-    private List<Pelicula> ObtenerPeliculasHalloween()
-    {
-        return repositorioPeliculas.ObtenerPeliculas();
+        Peliculas = repositorioPeliculas.ObtenerPeliculas();
     }
 }
 

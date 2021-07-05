@@ -1,25 +1,17 @@
 ﻿@page "/counter"
-@inject ServicioSingleton singleton
-@inject ServicioTransient transient
 @inject IRepositorioPeliculas repositorioPeliculas
 @inject IJSRuntime Js
 
-
 <h1>Counter</h1>
-
 
 <button @onclick="HazmeClick">Click !</button>
 <button @onclick="HazmeClickJavaScript">Click JavaScript!</button>
 <div>Contador : @Contador</div>
-<div>Singleton : @singleton.Valor</div>
-<div>Trasient : @transient.Valor</div>
 
 <br>
 <input type="text" placeholder="Inserte una nombre de Pelicula" @bind="NombrePelicula" />
 <button @onclick="InsertaNuevaPelicula">Agregar</button>
 <br>
-
-<ListarPeliculas Titulo="Peliculas Ramdom" Peliculas="Peliculas"></ListarPeliculas>
 
 <br />
 
@@ -55,8 +47,6 @@
         await moduloJs.InvokeVoidAsync("AlertaMensaje", "Hola desde C#");
 
         Contador++;
-        singleton.Valor = Contador;
-        transient.Valor = Contador;
         ContadorJs++;
         await Js.InvokeVoidAsync("pruebaPuntoNetStatic");
     }

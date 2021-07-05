@@ -1,58 +1,26 @@
 ﻿@inject IJSRuntime js
 
-<div>
-
-    @if (Peliculas != null && Peliculas.Count > 0)
-    {
-        <input type="checkbox" @bind="MostrarBotoles" />
-    }
-
+<div style="display: flex; flex-wrap; align-items: center;">
     <ListadoGenerico Listado="Peliculas">
         <HayRegistros>
-            <PeliculaIndividual Pelicula="context"
-                                MostrarBotones="MostrarBotoles"
-                                EliminarPeliculaCallBack="MostrarMensajeEnConsola">
-            </PeliculaIndividual>
+            <PeliculaIndividual Pelicula="context" EliminarPeliculaCallBack="MostrarMensajeEnConsola"></PeliculaIndividual>
         </HayRegistros>
     </ListadoGenerico>
-
-    <ModalMensaje @ref="modal" Encavezado="Confirmar" Confirmar="BorrarPeliculaConfirmacion" Cancelar="CancelarConfirmacion">
-        <div>Desea borrar la pelicula ?</div>
-    </ModalMensaje>
-
 </div>
 
 @code
 {
-    ModalMensaje modal;
-
-    [Parameter]
-    public string Titulo { set; get; }
-
     [Parameter]
     public List<Pelicula> Peliculas { set; get; }
 
-    bool MostrarBotoles = true;
-    Pelicula peliculaBorrar;
-
-
-    void MostrarMensajeEnConsola(Pelicula pelicula)
+    async Task MostrarMensajeEnConsola(Pelicula pelicula)
     {
-        modal.Mostrar();
-        peliculaBorrar = pelicula;
-    }
+        var confirmar = await js.Confirm($"Desea borrar la pelicula {pelicula.Titulo}?");
 
-    void BorrarPeliculaConfirmacion()
-    {
-        Peliculas.Remove(peliculaBorrar);
-        modal.Ocultar();
-        peliculaBorrar = null;
-    }
-
-    void CancelarConfirmacion()
-    {
-        modal.Ocultar();
-        peliculaBorrar = null;
+        if (confirmar)
+        {
+            Peliculas.Remove(pelicula);
+        }
     }
 }
 
