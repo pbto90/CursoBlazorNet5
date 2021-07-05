@@ -4,7 +4,10 @@
 @inject IRepositorioPeliculas repositorioPeliculas
 @inject IJSRuntime Js
 
+
 <h1>Counter</h1>
+
+
 <button @onclick="HazmeClick">Click !</button>
 <button @onclick="HazmeClickJavaScript">Click JavaScript!</button>
 <div>Contador : @Contador</div>
@@ -22,9 +25,13 @@
 
 @code
 {
+    /// <summary>
+    /// /
+    /// </summary>@using static BlazorPeliculas.Client.Shared.MainLayout
+
     public List<Pelicula> Peliculas { set; get; }
     public string NombrePelicula { set; get; }
-
+    //[CascadingParameter] protected AppEstado app { set; get; }
     private int Contador { set; get; }
     static int ContadorJs = 0;
 
@@ -44,7 +51,7 @@
     [JSInvokable]
     public async Task HazmeClick()
     {
-        moduloJs = await Js.InvokeAsync<IJSObjectReference>("import","./js/Counter.js");
+        moduloJs = await Js.InvokeAsync<IJSObjectReference>("import", "./js/Counter.js");
         await moduloJs.InvokeVoidAsync("AlertaMensaje", "Hola desde C#");
 
         Contador++;

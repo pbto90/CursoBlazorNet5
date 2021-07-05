@@ -11,7 +11,22 @@
         </div>
 
         <div class="content px-4">
-            @Body
+            <CascadingValue Value="@app.Color">
+                <CascadingValue Value="@app.Tamanio">
+                    @Body
+                </CascadingValue>         
+            </CascadingValue>
         </div>
     </div>
 </div>
+
+@code
+{
+    AppEstado app = new AppEstado();
+
+    public class AppEstado
+    {
+        public string Color { set; get; } = "Red";
+        public string Tamanio { set; get; } = "12px";
+    }
+}

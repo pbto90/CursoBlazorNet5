@@ -1,0 +1,149 @@
+﻿@page "/"
+@using System.Timers 
+@implements IDisposable
+
+<h1>Piedra, Papel y Tijeras</h1>
+
+@if(!string.IsNullOrEmpty(resultadoMensaje)) 
+{
+    <h3 style="color: @resultadoMensajeColor">@resultadoMensaje</h3>
+}
+
+<button class="btn btn-info" @onclick="@Reiniciar">Reiniciar</button>
+
+<div style="display: flex; justify-content:center; margin-bottom:20px">
+     <img src="@jugadaOponente.Imagen" class="imagen"/>
+</div>
+
+<div style="display: flex; justify-content: space-around">
+   
+    @foreach (var jugada in jugadas)
+    {
+        <img src="@jugada.Imagen" class="imagen imagen-seleccionable" @onclick="@(() => SeleccionarJugada(jugada))" />
+    }
+
+</div>
+
+@code
+{
+    Timer timer;
+    Jugada jugadaOponente;
+    string resultadoMensaje;
+    string resultadoMensajeColor;
+
+    List<Jugada> jugadas = new List<Jugada>()
+    {
+        new Jugada()
+        {
+            Imagen = "Piedra.png",
+            opcionPPT = OpcionPPT.Piedra,
+            VenceA = OpcionPPT.Tijera,
+            PierdeContra = OpcionPPT.Papel
+        },
+        new Jugada()
+        {
+            Imagen = "Papel.jpg",
+            opcionPPT = OpcionPPT.Papel,
+            VenceA = OpcionPPT.Piedra,
+            PierdeContra = OpcionPPT.Tijera
+        },
+        new Jugada()
+        {
+            Imagen = "Tijeras.jpg",
+            opcionPPT = OpcionPPT.Tijera,
+            VenceA = OpcionPPT.Papel,
+            PierdeContra = OpcionPPT.Piedra
+        }
+    };
+
+    protected override void OnInitialized()
+    {
+        jugadaOponente = jugadas[0];
+        timer = new Timer();
+        timer.Interval = 100;
+        timer.Elapsed += TimerOnElapsed;
+        timer.Start();
+    }
+
+    int indiceJugadaOponente = 0;
+
+    private void TimerOnElapsed(object sender, ElapsedEventArgs e)
+    {
+        indiceJugadaOponente = (indiceJugadaOponente + 1) % jugadas.Count;
+        jugadaOponente = jugadas[indiceJugadaOponente];
+        StateHasChanged();
+        Console.WriteLine("Timer ejecutado");
+    }
+
+    public void Dispose()
+    {
+        if (timer != null)
+        {
+            timer.Dispose();
+        }
+    }
+
+    private void Reiniciar()
+    {
+        timer.Start();
+        resultadoMensaje = null;
+        resultadoMensajeColor = null;
+    }
+
+    private void SeleccionarJugada(Jugada jugada)
+    {
+        timer.Stop();
+        var resultado = jugada.JugarContra(jugadaOponente);
+
+        if (resultado == EstatusJuego.Victoria)
+        {
+            resultadoMensaje = "Ganaste!";
+            resultadoMensajeColor = "green";
+        }
+        else if (resultado == EstatusJuego.Derrota)
+        {
+            resultadoMensaje = "Perdiste!";
+            resultadoMensajeColor = "red";
+        }
+        else
+        {
+            resultadoMensaje = "Empate!";
+            resultadoMensajeColor = "black";
+        }
+    }
+
+
+    class Jugada
+    {
+        public OpcionPPT opcionPPT { set; get; }
+        public OpcionPPT VenceA { set; get; }
+        public OpcionPPT PierdeContra { set; get; }
+        public string Imagen { set; get; }
+
+        public EstatusJuego JugarContra(Jugada jugada2)
+        {
+            if (opcionPPT == jugada2.opcionPPT)
+            {
+                return EstatusJuego.Empate;
+            }
+
+            if (VenceA == jugada2.opcionPPT)
+            {
+                return EstatusJuego.Victoria;
+            }
+
+            return EstatusJuego.Derrota;
+        }
+    }
+
+    enum OpcionPPT
+    {
+        Piedra, Papel, Tijera
+    }
+
+    enum EstatusJuego
+    {
+        Victoria, Derrota, Empate
+    }
+}
+
